@@ -1,0 +1,92 @@
+# Et arrangement pr år
+type Arrangement implements Node {
+  # The ID of an object
+  id: ID!
+
+  # Året hvor arrangementet finner sted
+  aarstall: Int!
+}
+
+input GjestBesokerPubInput {
+  personId: ID!
+  clientMutationId: String
+}
+
+type GjestBesokerPubPayload {
+  pub: Pub
+  arrangement: Arrangement
+  clientMutationId: String
+}
+
+type Mutation {
+  gjestBesokerPub(input: GjestBesokerPubInput!): GjestBesokerPubPayload
+}
+
+# An object with an ID
+interface Node {
+  # The id of the object.
+  id: ID!
+}
+
+# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+}
+
+# En deltaker på løpet
+type Person {
+  # The ID of an object
+  id: ID!
+
+  # Deltakerens navn
+  navn: String!
+}
+
+# A connection to a list of items.
+type PersonConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [PersonEdge]
+}
+
+# An edge in a connection.
+type PersonEdge {
+  # The item at the end of the edge
+  node: Person
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# Et vannhull langs løypa
+type Pub {
+  # The ID of an object
+  id: ID!
+
+  # Etablissementets navn
+  navn: String!
+
+  # Gjester på denne puben akkurat nå
+  gjester(after: String, first: Int, before: String, last: Int): PersonConnection
+}
+
+type Query {
+  # Fetches an object given its ID
+  node(
+    # The ID of an object
+    id: ID!
+  ): Node
+  arrangement: Arrangement
+}
